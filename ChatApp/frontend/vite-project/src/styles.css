@@ -1,0 +1,11 @@
+body { font-family: Arial, sans-serif; background: #ffffff; margin: 0; padding: 20px; }
+.app { max-width: 720px; margin: 0 auto; }
+.chat-container { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+.history { max-height: 60vh; overflow: auto; padding-bottom: 12px; }
+.msg { margin-bottom: 12px; padding: 8px; border-radius: 6px; }
+.msg.you { background: #e6f0ff; align-self: flex-end; }
+.msg.bot { background: #f1f1f1; }
+.input-row { display: flex; gap: 8px; }
+input { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ddd; }
+button { padding: 10px 14px; border-radius: 6px; border: none; background: #2563eb; color: #fff; cursor: pointer; }
+button:disabled { opacity: 0.6; cursor: default; }
