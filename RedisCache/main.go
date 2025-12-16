@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
@@ -17,7 +18,7 @@ type Person struct {
 }
 
 func main() {
-    godotenv.Load()
+	godotenv.Load()
 
 	fmt.Println("Redis Connection")
 
@@ -49,26 +50,26 @@ func main() {
 		return
 	}
 
-	err = client.Set(ctx, "user:1", personJSON, 0).Err()
+	err = client.Set(ctx, "user:1", personJSON, 2*time.Minute).Err()
 	if err != nil {
 		fmt.Println("Error setting user:", err.Error())
 		return
 	}
 
-	fmt.Println("User set successfully:", person)
-
-	val, err := client.Get(ctx, "user:1").Result()
+	ttl, err := client.TTL(ctx, "user:1").Result()
 	if err != nil {
-		fmt.Println("Error getting user:", err.Error())
-		return
+		panic(err)
 	}
+	fmt.Printf("Time-to-live for session key: %v\n", ttl)
 
-	var retrievedPerson Person
-	err = json.Unmarshal([]byte(val), &retrievedPerson)
-	if err != nil {
-		fmt.Println("Error unmarshaling person:", err.Error())
-		return
+	time.Sleep(3 * time.Second)
+
+	value, err := client.Get(ctx, "user:1").Result()
+	if err == redis.Nil {
+		fmt.Println("Value: None")
+	} else if err != nil {
+		panic(err)
+	} else {
+		fmt.Printf("Value: %s\n", value)
 	}
-
-	fmt.Println("User retrieved successfully:", retrievedPerson)
 }
